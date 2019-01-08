@@ -1,0 +1,26 @@
+{
+  "name": "collabdoc",
+  "version": "1.0.0",
+  "description": "peer to peer online collaborative editor ",
+  "main": "app.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kartikkh/collabster.git"
+  },
+  "keywords": [
+    "editor",
+    "collabrator"
+  ],
+  "author": "kartik khandelwal",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Kartikkh/collabster/issues"
+  },
+  "homepage": "https://github.com/Kartikkh/collabster#readme",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}

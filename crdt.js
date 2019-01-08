@@ -1,13 +1,39 @@
+class CRDT {
+    constructor(id) {
+        this.siteId = id;
+        this.struct = []; // this struct store the whole document
+    }
+
+    localInsert(val,index){
+       const posBefore = this.struct[index-1].position;
+       const posAfter = this.struct[index].position;
+
+    }
+
+    localDelete(position){
+        this.struct.splice(position,1)
+    }
+
+    remoteInsert(){
+
+    }
+
+    remoteDelete(){
+
+    }
+
+}
+
 class Identifier{
-    constructor(siteId, siteCounter ) {
-        this.siteId = siteId;
+    constructor(siteId, siteCounter) {
+        this.siteId = siteId; // uniqueId assign to each client
         this.siteCounter = siteCounter;
     }
 }
 
 class Character{
-    constructor(value , counter, position) {
-        this.position = position;
+    constructor(value , counter, identifiers) {
+        this.position = identifiers;
         this.lamportClock = counter;
         this.value = value;
     }
