@@ -7,6 +7,27 @@ class CRDT {
     localInsert(val,index){
        const posBefore = this.struct[index-1].position;
        const posAfter = this.struct[index].position;
+       generatePosBetween(posBefore,posAfter)
+    }
+
+    generatePosBetween(posBefore, posAfter){
+        if (posBefore.length === 0) {
+            return new Identifier(this.siteId, 0)
+        }
+        else if (posAfter[0].siteCounter - posBefore[0].siteCounter > 1 ){
+            let newPos =  Math.floor((posAfter[0].siteCounter - posBefore[0].siteCounter)/2)
+            return new Identifier(this.siteId , newPos)
+        }
+        else if (posAfter[0].siteCounter - posBefore[0].siteCounter <= 1){
+
+        }
+
+        if (posBefore[0].siteCounter === posAfter[0].siteCounter) {
+            if (posBefore[0].siteId < posAfter[0].siteId){
+
+            }
+        }
+
 
     }
 
@@ -21,7 +42,6 @@ class CRDT {
     remoteDelete(){
 
     }
-
 }
 
 class Identifier{
@@ -33,7 +53,7 @@ class Identifier{
 
 class Character{
     constructor(value , counter, identifiers) {
-        this.position = identifiers;
+        //this.position = identifiers;
         this.lamportClock = counter;
         this.value = value;
     }
