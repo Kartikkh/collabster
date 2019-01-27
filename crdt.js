@@ -6,7 +6,10 @@ class CRDT {
         this.siteId = id;
         this.struct = []; // this structure store the whole document
         this.base = base;
-        this.boundary = boundary
+        this.boundary = boundary;
+        this.length = 0;
+        this.counter = 0;
+        this.text = "";
     }
 
     static selectBoundary() {
@@ -16,28 +19,49 @@ class CRDT {
         }
         return "-"
     }
-    
+
+    incrementCounter() {
+        this.counter++
+    }
+
+    updateText() {
+        this.text = this.struct.map(char => char.value).join('');
+    }
+
     localInsert(val, index) {
+        this.incrementCounter();
+        let char = this.getChar(index);
+        this.struct.push(char);
+        this.struct = this.struct.sortIdentifier();
+        this.updateText();
+    }
+
+    getChar(val, index) {
         const posBefore = this.struct[index - 1].position;
         const posAfter = this.struct[index].position;
-        this.generatePosBetween(posBefore, posAfter)
+        let newPos = this.generatePosBetween(posBefore, posAfter);
+        return new Character(val, this.counter, newPos)
     }
 
     generatePosBetween(posBefore, posAfter, newPos = [], level = 0) {
 
+        let base = this.base * Math.pow(2, level);
+        let boundaryCondition = CRDT.selectBoundary();
+
         posBefore = posBefore[0] || new Identifier(this.siteId, 0);
         posAfter = posAfter[0] || new Identifier(this.siteId, 10);
-        let boundaryCondition = this.selectBoundary();
+
         if (posAfter.siteCounter - posBefore.siteCounter > 1) {
-            let newDigit = this.generateIdBetween(posBefore.siteCounter, posAfter.siteCounter, boundaryCondition);
-            newPos.push(new Identifier(newDigit, this.siteId));
+            let position = this.generateIdBetween(posBefore.siteCounter, posAfter.siteCounter, boundaryCondition);
+            newPos.push(new Identifier(position, this.siteId));
             return newPos;
         } else if (posAfter.siteCounter - posBefore.siteCounter <= 1) {
-            this.generateIdBetween(posBefore, posAfter, newPos, level++)
+            newPos.push(posBefore);
+            this.generateIdBetween(posBefore, posAfter, newPos, level + 1)
         }
         if (posBefore.siteCounter === posAfter.siteCounter) {
             if (posBefore.siteId < posAfter.siteId) {
-
+                newPos.push(posBefore)
             }
         }
     }
@@ -60,7 +84,17 @@ class CRDT {
     }
 
     localDelete(position) {
-        this.struct.splice(position, 1)
+        this.struct.splice(position, 1);
+        this.incrementCounter();
+        this.length--
+    }
+
+    deleteChar(char) {
+        let index = this.struct.indexOf(char);
+        if (index < 0) {
+            throw new Error("no character found !")
+        }
+        this.localDelete(index)
     }
 
     remoteInsert() {

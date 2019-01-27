@@ -3,6 +3,10 @@ class Identifier{
         this.siteId = siteId; // uniqueId assign to each client
         this.siteCounter = siteCounter;
     }
+
+    sortIdentifier(){
+        
+    }
 }
 
 
