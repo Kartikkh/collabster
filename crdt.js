@@ -4,11 +4,19 @@ import {Character} from "./char";
 class CRDT {
     constructor(id, base = 32, boundary = 10) {
         this.siteId = id;
-        this.struct = []; // this struct store the whole document
+        this.struct = []; // this structure store the whole document
         this.base = base;
         this.boundary = boundary
     }
 
+    static selectBoundary() {
+        let boundary = Math.floor(Math.random() * 2);
+        if (boundary) {
+            return "+"
+        }
+        return "-"
+    }
+    
     localInsert(val, index) {
         const posBefore = this.struct[index - 1].position;
         const posAfter = this.struct[index].position;
@@ -19,13 +27,13 @@ class CRDT {
 
         posBefore = posBefore[0] || new Identifier(this.siteId, 0);
         posAfter = posAfter[0] || new Identifier(this.siteId, 10);
-
+        let boundaryCondition = this.selectBoundary();
         if (posAfter.siteCounter - posBefore.siteCounter > 1) {
-            let newDigit = this.generateIdBetween(posBefore.siteCounter, posAfter.siteCounter, boundaryStrategy);
+            let newDigit = this.generateIdBetween(posBefore.siteCounter, posAfter.siteCounter, boundaryCondition);
             newPos.push(new Identifier(newDigit, this.siteId));
-            return newPos
+            return newPos;
         } else if (posAfter.siteCounter - posBefore.siteCounter <= 1) {
-
+            this.generateIdBetween(posBefore, posAfter, newPos, level++)
         }
         if (posBefore.siteCounter === posAfter.siteCounter) {
             if (posBefore.siteId < posAfter.siteId) {
@@ -34,21 +42,21 @@ class CRDT {
         }
     }
 
-    generateIdBetween(min, max, boundaryStrategy) {
-        if (max-min > this.boundary){
-            min = min+1;
-        }else{
-            if (boundaryStrategy === "-"){
-                
-            }else{
-
+    generateIdBetween(min, max, boundaryCondition) {
+        // if boundary > max - min then select (min+1.....max)
+        if (max - min > this.boundary) {
+            min = min + 1;
+        } else {
+            // if mix-min < boundary and if boundary condition is +
+            // then change max = boundary such that location of newDigit would be (min+1 .... boundary)
+            if (boundaryCondition === "+") {
+                min = min + 1;
+                max = this.boundary;
+            } else {
+                min = max - this.boundary;
             }
         }
-        return Math.floor(Math.random())
-    }
-
-    selectBoundary() {
-
+        return Math.floor(Math.random() * (max - min) + min);
     }
 
     localDelete(position) {
