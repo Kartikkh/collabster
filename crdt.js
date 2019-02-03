@@ -32,7 +32,9 @@ class CRDT {
         this.incrementCounter();
         let char = this.getChar(index);
         this.struct.push(char);
-        this.struct = this.struct.sortIdentifier();
+        this.struct = this.struct.sort(function (char1,char2) {
+           char1.compareToChar(char2)
+        });
         this.updateText();
     }
 
@@ -49,7 +51,7 @@ class CRDT {
         let boundaryCondition = CRDT.selectBoundary();
 
         posBefore = posBefore[0] || new Identifier(this.siteId, 0);
-        posAfter = posAfter[0] || new Identifier(this.siteId, 10);
+        posAfter = posAfter[0] || new Identifier(this.siteId, base);
 
         if (posAfter.siteCounter - posBefore.siteCounter > 1) {
             let position = this.generateIdBetween(posBefore.siteCounter, posAfter.siteCounter, boundaryCondition);
@@ -96,19 +98,4 @@ class CRDT {
         }
         this.localDelete(index)
     }
-
-    remoteInsert() {
-
-    }
-
-    remoteDelete() {
-
-    }
 }
-
-
-const id1 = new Identifier(1, 1);
-const id2 = new Identifier(2, 1);
-
-const char1 = new Character('A', 1, [id1]);
-const char2 = new Character('B', 2, [id2]);
