@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/Kartikkh/collabster#readme",
   "dependencies": {
-    "express": "^4.16.4"
+    "express": "^4.16.4",
+    "simplemde": "^1.11.2"
   }
 }
