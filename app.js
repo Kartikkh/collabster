@@ -7,7 +7,7 @@ app.set('views', './views');
 app.set('view engine', 'pug');
 
 app.get('/', function (req, res) {
-    res.render()
+    res.render('html/index')
 });
 
 app.listen(3000, function () {

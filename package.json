@@ -23,6 +23,7 @@
   "dependencies": {
     "express": "^4.16.4",
     "pug": "^2.0.3",
+    "rxjs": "^6.4.0",
     "simplemde": "^1.11.2"
   }
 }
